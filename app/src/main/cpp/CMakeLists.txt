@@ -40,10 +40,19 @@ target_link_libraries(winlator
 add_library(evshim SHARED winlator/evshim.c)
 
 # ---------- SDL2 library (Build from source) ----------
-# Add SDL2 as a library target.
-# This assumes cpp/sdl2 has its own CMakeLists.txt or you list its sources here.
-# Most commonly, SDL2 comes with its own CMake build system.
-# If cpp/sdl2 has a CMakeLists.txt:
+# SDL2 is only used at runtime via dlopen (see winlator/evshim.c); these options
+# trim unused subsystems and avoid the ALooper_pollAll API that NDK r27 marks
+# obsolete (SDL_androidsensor.c).
+set(SDL_SHARED ON CACHE BOOL "" FORCE)
+set(SDL_STATIC OFF CACHE BOOL "" FORCE)
+set(SDL_SENSOR OFF CACHE BOOL "" FORCE)
+set(SDL_SENSOR_ANDROID OFF CACHE BOOL "" FORCE)
+set(SDL_HAPTIC OFF CACHE BOOL "" FORCE)
+set(SDL_POWER OFF CACHE BOOL "" FORCE)
+set(SDL_FILESYSTEM OFF CACHE BOOL "" FORCE)
+set(SDL_RENDER OFF CACHE BOOL "" FORCE)
+set(SDL_AUDIO OFF CACHE BOOL "" FORCE)
+set(SDL_JOYSTICK ON CACHE BOOL "" FORCE)
 add_subdirectory(sdl2) # This will create an SDL2 target (often named SDL2::SDL2 or just SDL2)
 
 # If you need to list SDL2 source files manually (less ideal if SDL2 is complex):
